@@ -115,7 +115,6 @@ main {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1rem;
-  font-weight: bold;
   pointer-events: none;
 }
 .close-icon {
