@@ -8,8 +8,8 @@
   
   /* Navigation and spacing variables */
   --nav-font-size: clamp(0.8rem, 2vw, 1rem);
-  --header-indent: 2rem;
-  --nav-indent: 2rem;
+  --header-indent: 4rem;
+  --nav-indent: 6rem;
 }
 
 /* Reset */
@@ -48,13 +48,13 @@ header h1 a {
 .content nav {
   flex: 0 0 200px;
   margin-left: var(--nav-indent);
-  margin-top: 1rem;
+  margin-top: 0rem;
 }
 .content nav ul {
   list-style: none;
 }
 .content nav li {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 .content nav a {
   text-decoration: none;
