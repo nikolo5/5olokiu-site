@@ -1,15 +1,12 @@
 :root {
-  /* Box dimensions (10% smaller than original values) */
-  --box-width: clamp(252px, 31.5vw, 405px);
-  --box-height: clamp(252px, 31.5vw, 405px);
+  /* Box dimensions increased by about 30% */
+  --box-width: clamp(327px, 41vw, 526px);
+  --box-height: clamp(327px, 41vw, 526px);
   
-  /* Buffer = 5% of the box width */
+  /* Buffer (kept for potential future use) */
   --buffer: calc(var(--box-width) * 0.05);
   
-  /* Offset for left-column boxes (15% of viewport height) */
-  --offset: 15vh;
-  
-  /* Basic typography and spacing variables */
+  /* Navigation and spacing variables */
   --nav-font-size: clamp(0.8rem, 2vw, 1rem);
   --header-indent: 2rem;
   --nav-indent: 2rem;
@@ -41,24 +38,30 @@ header h1 a {
   font-size: 2rem;
 }
 
-/* Navigation */
-nav {
+/* Content Wrapper */
+.content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Navigation (restored as in the four-box version) */
+.content nav {
   flex: 0 0 200px;
   margin-left: var(--nav-indent);
   margin-top: 1rem;
 }
-nav ul {
+.content nav ul {
   list-style: none;
 }
-nav li {
+.content nav li {
   margin-bottom: 1rem;
 }
-nav a {
+.content nav a {
   text-decoration: none;
   color: #000;
   font-size: var(--nav-font-size);
 }
-nav a:hover {
+.content nav a:hover {
   text-decoration: underline;
 }
 
@@ -69,12 +72,12 @@ main {
   position: relative;
 }
 
-/* Container for boxes */
+/* Container for Boxes */
 .boxes-container {
   position: relative;
 }
 
-/* Movable Boxes */
+/* Movable Box (single yellow drawing box) */
 .movable-box {
   position: fixed;
   width: var(--box-width);
@@ -83,63 +86,37 @@ main {
   border-radius: 12px;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
   overflow: hidden;
-  z-index: 1; /* Will be raised on click/drag */
+  z-index: 1;
 }
 
-/* 2×2 Grid Layout with Even Buffer and Offset */
-/* Right-Column Boxes */
+/* Position the yellow drawing box:
+   Centered horizontally, below the header (here top is set to 40% of viewport) */
 #box-drawing {
-  left: calc(50% + ((var(--box-width) + var(--buffer)) / 2));
-  top: calc(50% - ((var(--box-height) + var(--buffer)) / 2));
-  transform: translate(-50%, -50%);
-}
-#box-lilac {
-  left: calc(50% + ((var(--box-width) + var(--buffer)) / 2));
-  top: calc(50% + ((var(--box-height) + var(--buffer)) / 2));
+  left: 50%;
+  top: 40%;
   transform: translate(-50%, -50%);
 }
 
-/* Left-Column Boxes (Shifted Down by --offset) */
-#box-blue {
-  left: calc(50% - ((var(--box-width) + var(--buffer)) / 2));
-  top: calc(50% - ((var(--box-height) + var(--buffer)) / 2) + var(--offset));
-  transform: translate(-50%, -50%);
-}
-#box-green {
-  left: calc(50% - ((var(--box-width) + var(--buffer)) / 2));
-  top: calc(50% + ((var(--box-height) + var(--buffer)) / 2) + var(--offset));
-  transform: translate(-50%, -50%);
-}
-
-/* Box Background Colors */
+/* Yellow Background */
 .movable-box[data-color="yellow"] {
   background-color: #FEF9C3;
 }
-.movable-box[data-color="green"] {
-  background-color: #CFFFE5;
-}
-.movable-box[data-color="blue"] {
-  background-color: #CFEFFF;
-}
-.movable-box[data-color="lilac"] {
-  background-color: #E8CCFF;
-}
 
-/* Drag Bar & Close Icon */
+/* Drag Bar & Title */
 .drag-bar {
   height: 2rem;
   background-color: rgba(0, 0, 0, 0.1);
   cursor: move;
   position: relative;
 }
-/* New title in drag bar for drawing box */
 .box-title {
   position: absolute;
   left: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1rem;
-  pointer-events: none; /* so dragging isn't affected */
+  font-weight: bold;
+  pointer-events: none;
 }
 .close-icon {
   position: absolute;
@@ -158,7 +135,7 @@ main {
   padding: 0.5rem;
 }
 
-/* Drawing Box Controls (Refresh and Send) */
+/* Drawing Box Controls */
 /* Refresh (restart) button moved to bottom left */
 .restart-button,
 .send-button {
@@ -209,18 +186,18 @@ main {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+  header {
+    text-align: center;
+  }
   .content {
     flex-direction: column;
     align-items: center;
   }
-  nav {
+  .content nav {
     margin: 1rem 0;
     text-align: center;
   }
   main {
     justify-content: center;
-  }
-  header {
-    text-align: center;
   }
 }
