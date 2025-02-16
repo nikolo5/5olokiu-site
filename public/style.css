@@ -1,0 +1,226 @@
+:root {
+  /* Box dimensions (10% smaller than original values) */
+  --box-width: clamp(252px, 31.5vw, 405px);
+  --box-height: clamp(252px, 31.5vw, 405px);
+  
+  /* Buffer = 5% of the box width */
+  --buffer: calc(var(--box-width) * 0.05);
+  
+  /* Offset for left-column boxes (15% of viewport height) */
+  --offset: 15vh;
+  
+  /* Basic typography and spacing variables */
+  --nav-font-size: clamp(0.8rem, 2vw, 1rem);
+  --header-indent: 2rem;
+  --nav-indent: 2rem;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base Styles */
+body {
+  font-family: "Monaco", monospace;
+  background-color: #fff;
+  color: #000;
+  line-height: 1.5;
+}
+
+/* Header */
+header {
+  margin: var(--header-indent);
+  margin-top: 2.5rem;
+}
+header h1 a {
+  text-decoration: none;
+  color: inherit;
+  font-size: 2rem;
+}
+
+/* Navigation */
+nav {
+  flex: 0 0 200px;
+  margin-left: var(--nav-indent);
+  margin-top: 1rem;
+}
+nav ul {
+  list-style: none;
+}
+nav li {
+  margin-bottom: 1rem;
+}
+nav a {
+  text-decoration: none;
+  color: #000;
+  font-size: var(--nav-font-size);
+}
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Main Content Area */
+main {
+  flex: 1;
+  margin: 1rem;
+  position: relative;
+}
+
+/* Container for boxes */
+.boxes-container {
+  position: relative;
+}
+
+/* Movable Boxes */
+.movable-box {
+  position: fixed;
+  width: var(--box-width);
+  height: var(--box-height);
+  border: 2px solid #eee;
+  border-radius: 12px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  overflow: hidden;
+  z-index: 1; /* Will be raised on click/drag */
+}
+
+/* 2×2 Grid Layout with Even Buffer and Offset */
+/* Right-Column Boxes */
+#box-drawing {
+  left: calc(50% + ((var(--box-width) + var(--buffer)) / 2));
+  top: calc(50% - ((var(--box-height) + var(--buffer)) / 2));
+  transform: translate(-50%, -50%);
+}
+#box-lilac {
+  left: calc(50% + ((var(--box-width) + var(--buffer)) / 2));
+  top: calc(50% + ((var(--box-height) + var(--buffer)) / 2));
+  transform: translate(-50%, -50%);
+}
+
+/* Left-Column Boxes (Shifted Down by --offset) */
+#box-blue {
+  left: calc(50% - ((var(--box-width) + var(--buffer)) / 2));
+  top: calc(50% - ((var(--box-height) + var(--buffer)) / 2) + var(--offset));
+  transform: translate(-50%, -50%);
+}
+#box-green {
+  left: calc(50% - ((var(--box-width) + var(--buffer)) / 2));
+  top: calc(50% + ((var(--box-height) + var(--buffer)) / 2) + var(--offset));
+  transform: translate(-50%, -50%);
+}
+
+/* Box Background Colors */
+.movable-box[data-color="yellow"] {
+  background-color: #FEF9C3;
+}
+.movable-box[data-color="green"] {
+  background-color: #CFFFE5;
+}
+.movable-box[data-color="blue"] {
+  background-color: #CFEFFF;
+}
+.movable-box[data-color="lilac"] {
+  background-color: #E8CCFF;
+}
+
+/* Drag Bar & Close Icon */
+.drag-bar {
+  height: 2rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: move;
+  position: relative;
+}
+/* New title in drag bar for drawing box */
+.box-title {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none; /* so dragging isn't affected */
+}
+.close-icon {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+}
+
+/* Box Content */
+.box-content {
+  width: 100%;
+  height: calc(100% - 2rem);
+  position: relative;
+  padding: 0.5rem;
+}
+
+/* Drawing Box Controls (Refresh and Send) */
+/* Refresh (restart) button moved to bottom left */
+.restart-button,
+.send-button {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+.restart-button img,
+.send-button img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+.restart-button {
+  bottom: 0.5rem;
+  left: 0.5rem;
+}
+.send-button {
+  bottom: 0.5rem;
+  right: 0.5rem;
+}
+
+/* Minimized Boxes Container */
+.minimized-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+.minimized-box {
+  width: 80px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    align-items: center;
+  }
+  nav {
+    margin: 1rem 0;
+    text-align: center;
+  }
+  main {
+    justify-content: center;
+  }
+  header {
+    text-align: center;
+  }
+}

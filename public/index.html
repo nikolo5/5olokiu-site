@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5olokiu.net</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1><a href="/">5olokiu.net</a></h1>
+  </header>
+
+  <div class="content">
+    <nav>
+      <ul>
+        <li><a href="/images">images</a></li>
+        <li><a href="/blog">blog</a></li>
+        <li><a href="/projects">projects</a></li>
+        <li><a href="/about">about</a></li>
+        <li><a href="/contact">contact</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <div class="boxes-container">
+        <!-- Drawing Box (Pastel Yellow) -->
+        <div class="movable-box" id="box-drawing" data-color="yellow">
+			<div class="drag-bar">
+			  <span class="box-title">Draw</span>
+			  <img src="icons/delete.png" alt="Close" class="close-icon" />
+			</div>
+			<div class="box-content">
+			  <canvas id="drawing-canvas"></canvas>
+			  <!-- Refresh (Restart) button now moved to bottom left -->
+			  <button class="restart-button" title="Restart Drawing">
+				<img src="icons/refresh.png" alt="Refresh Drawing" />
+			  </button>
+			  <button class="send-button" title="Send Drawing">
+				<img src="icons/right-arrow.png" alt="Send Drawing" />
+			  </button>
+			</div>
+		  </div>
+	  </div>
+
+        <!-- Additional Box 1 (Pastel Green) -->
+        <div class="movable-box" id="box-green" data-color="green">
+          <div class="drag-bar">
+            <img src="icons/delete.png" alt="Close" class="close-icon" />
+          </div>
+          <div class="box-content">
+            <p>Green Box Content</p>
+          </div>
+        </div>
+
+        <!-- Additional Box 2 (Pastel Blue) -->
+        <div class="movable-box" id="box-blue" data-color="blue">
+          <div class="drag-bar">
+            <img src="icons/delete.png" alt="Close" class="close-icon" />
+          </div>
+          <div class="box-content">
+            <p>Blue Box Content</p>
+          </div>
+        </div>
+
+        <!-- Additional Box 3 (Pastel Lilac) -->
+        <div class="movable-box" id="box-lilac" data-color="lilac">
+          <div class="drag-bar">
+            <img src="icons/delete.png" alt="Close" class="close-icon" />
+          </div>
+          <div class="box-content">
+            <p>Lilac Box Content</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Container for minimized boxes at the bottom -->
+  <div class="minimized-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
