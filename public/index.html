@@ -4,29 +4,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>5olokiu.net</title>
-  <!-- Link to the shared CSS file -->
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon/favicon-96x96.png">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1><a href="index.html">5olokiu.net</a></h1>
+    <h1><a href="index.html">5olokiu</a></h1>
   </header>
   <div class="content">
-    <nav>
-      <ul>
-        <li><a href="images.html">images</a></li>
-        <li><a href="blog.html">blog</a></li>
-        <li><a href="projects.html">projects</a></li>
-        <li><a href="about.html">about</a></li>
-        <li><a href="contact.html">contact</a></li>
-      </ul>
-    </nav>
+    <!-- Nav Box: updated (no minimise button) -->
+    <div class="movable-nav" data-color="nav">
+      <div class="drag-bar">
+        <span class="box-title">nav</span>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="images.html">images</a></li>
+          <li><a href="blog.html">blog</a></li>
+          <li><a href="projects.html">projects</a></li>
+          <li><a href="about.html">about</a></li>
+          <li><a href="contact.html">contact</a></li>
+        </ul>
+      </nav>
+    </div>
     <main>
       <div class="boxes-container">
+        <!-- Draw Box -->
         <div class="movable-box" id="box-drawing" data-color="yellow">
           <div class="drag-bar">
-            <span class="box-title">draw</span>
-            <img src="icons/delete.png" alt="Close" class="close-icon" />
+			<span class="box-title">draw</span>
+            <span class="box-title" style="display: none;">draw</span>
+            <img src="icons/minimise.png" alt="Minimise" class="minimise-icon" />
           </div>
           <div class="box-content">
             <canvas id="drawing-canvas"></canvas>
@@ -41,10 +49,10 @@
       </div>
     </main>
   </div>
+  <footer>
+    <p>5olokiu.net - no rights reserved</p>
+  </footer>
   <div class="minimized-container"></div>
   <script src="script.js"></script>
-  <footer>
-	<p>&copy; 2025 5olokiu.net &bull; No rights reserved</p>
-  </footer>
 </body>
 </html>

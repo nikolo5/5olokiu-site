@@ -1,5 +1,5 @@
 html {
-  font-size: 20px; /* Increased base font size */
+  font-size: 20px; /* Increased base font size (approx. 2pt larger than default 16px) */
 }
 
 /* Define all custom fonts */
@@ -41,10 +41,10 @@ html {
 
 /* CSS Variables for easy switching */
 :root {
-  /* Font variables: change these to quickly adjust fonts across the site */
+  /* Font variables */
   --heading-font: 'VulfMonoBoldItalic', sans-serif;  /* Used for headings */
-  --main-font: 'VulfSansLightItalic', sans-serif; /* Used for navigation and main */
-  --body-font: 'VulfMonoLightItalic', sans-serif;      /* Used for large body text*/
+  --main-font: 'VulfSansLightItalic', sans-serif;      /* Used for nav and footer */
+  --body-font: 'VulfMonoLightItalic', sans-serif;      /* Used for large body text */
   --alternative-font: 'VulfMonoRegular', sans-serif;
   --sans-font: 'VulfSansLight', sans-serif;
   
@@ -74,18 +74,37 @@ body {
   background-color: #fff;
   color: #000;
   line-height: 1.5;
+  position: relative; /* For pseudo-element positioning */
+}
+
+/* Graph paper background with radial fade using a pseudo-element */
+body::before {
+  content: "";
+  position: fixed; /* covers the entire viewport */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;  /* Place behind all content */
+  background-image: 
+    repeating-linear-gradient(0deg, #e3e3e3, #e3e3e3 1px, transparent 1px, transparent 20px),
+    repeating-linear-gradient(90deg, #e3e3e3, #e3e3e3 1px, transparent 1px, transparent 20px),
+    radial-gradient(ellipse at center, transparent 70%, #fff 95%);
+  background-size: 20px 20px, 20px 20px, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
 }
 
 /* Header */
 header {
   margin: var(--header-indent);
   margin-top: 2.5rem;
+  text-align: center;
 }
 header h1 a {
   text-decoration: none;
   color: inherit;
   font-size: 2rem;
-  font-family: var(--body-font);
+  font-family: var(--heading-font);
 }
 
 /* Content Wrapper */
@@ -94,26 +113,67 @@ header h1 a {
   flex-wrap: wrap;
 }
 
-/* Navigation (restored from previous version) */
-.content nav {
-  flex: 0 0 200px;
-  margin-left: var(--nav-indent);
-  margin-top: 1rem;
+/* Movable Nav Box */
+.movable-nav {
+  position: fixed;
+  width: 220px;
+  height: 300px;
+  border: 2px solid #eee;
+  border-radius: 12px; /* Ensures all corners are rounded */
+  overflow: hidden;    /* Clipping inner elements to respect border-radius */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  background-color: #fff;
+  z-index: 1;
+  top: 25%;   /* Vertical position: 25% from the top of the viewport */
+  left: 5%;   /* Horizontal position: 5% from the left of the viewport */
+  transform: translate(0, -50%); /* Only vertically center the box */
+  color: var(--secondary-color, #000); /* You can adjust the color as desired */
 }
-.content nav ul {
+
+/* Drag Bar for Nav Box */
+.movable-nav .drag-bar {
+  height: 2rem;
+  background-color: rgba(0,0,0,0.1);
+  cursor: move;
+  position: relative;
+  padding: 0 0.5rem;
+}
+.movable-nav .box-title {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  font-family: var(--main-font);
+  font-weight: normal;
+  pointer-events: none;
+}
+
+/* Navigation inside Nav Box */
+.movable-nav nav {
+  padding: 0.5rem;
+}
+.movable-nav nav ul {
   list-style: none;
 }
-.content nav li {
+.movable-nav nav li {
   margin-bottom: 1rem;
 }
-.content nav a {
-  text-decoration: none;
+.movable-nav nav a {
+  text-decoration: none; /* Remove underline by default */
   color: #000;
   font-size: var(--nav-font-size);
   font-family: var(--main-font);
 }
-.content nav a:hover {
-  text-decoration: underline;
+
+.movable-nav nav a:hover {
+  text-decoration: none; /* Remove underline on hover as well */
+}
+
+/* Remove active underline if present */
+.movable-nav nav a.active {
+  text-decoration: none;
+  color: var(--secondary-color, #000); /* Change color if needed */
 }
 
 /* Main Content Area */
@@ -123,12 +183,12 @@ main {
   position: relative;
 }
 
-/* Container for Boxes */
+/* Container for Boxes (Draw Box) */
 .boxes-container {
   position: relative;
 }
 
-/* Movable Box (single yellow drawing box) */
+/* Movable Draw Box */
 .movable-box {
   position: fixed;
   width: var(--box-width);
@@ -139,26 +199,22 @@ main {
   overflow: hidden;
   z-index: 1;
 }
-
-/* Position the yellow drawing box:
-   Centered horizontally and below the header (top set to 40% of viewport height) */
 #box-drawing {
   left: 50%;
   top: 40%;
   transform: translate(-50%, -50%);
 }
-
-/* Yellow Background */
 .movable-box[data-color="yellow"] {
   background-color: #FEF9C3;
 }
 
-/* Drag Bar & Title */
+/* Drag Bar & Title for Draw Box */
 .drag-bar {
   height: 2rem;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0,0,0,0.1);
   cursor: move;
   position: relative;
+  padding: 0 0.5rem;
 }
 .box-title {
   position: absolute;
@@ -166,12 +222,11 @@ main {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1rem;
-  /* Use the body font (light version) so that this title is not bold */
   font-family: var(--main-font);
   font-weight: normal;
   pointer-events: none;
 }
-.close-icon {
+.minimise-icon {
   position: absolute;
   top: 0.4rem;
   right: 0.4rem;
@@ -180,7 +235,7 @@ main {
   cursor: pointer;
 }
 
-/* Box Content */
+/* Box Content for Draw Box */
 .box-content {
   width: 100%;
   height: calc(100% - 2rem);
@@ -189,7 +244,6 @@ main {
 }
 
 /* Drawing Box Controls */
-/* Refresh button moved to bottom left, send button at bottom right */
 .restart-button,
 .send-button {
   position: absolute;
@@ -214,43 +268,31 @@ main {
   right: 0.5rem;
 }
 
-/* Minimized Boxes Container */
+/* Minimized Boxes Container (applies to draw box only) */
 .minimized-container {
   position: fixed;
-  bottom: 0;
+  bottom: 100px; /* Above the footer */
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.05);
-  padding: 0.5rem;
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
 }
 .minimized-box {
-  width: 80px;
-  height: 40px;
-  border: 1px solid #ccc;
+  width: 60px;
+  height: 60px;
+  background-color: #FEF9C3;
+  border: 1px solid #eee;
   border-radius: 4px;
-  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font-size: 0;
+  color: transparent;
 }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: rgba(0,0,0,0.05);
-  font-size: 0.9rem;
-  margin-top: 2rem;
-}
-footer p {
-  margin: 0;
-  color: #555;
-  font-family: var(--body-font);
-}
-
-/* Gallery Styles for Images Page (if needed) */
+/* Gallery Styles for Images Page */
 .gallery {
   display: grid;
   grid-gap: 1rem;
@@ -265,6 +307,23 @@ footer p {
 }
 .gallery img:hover {
   transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f0f0f0; /* consistent light grey */
+  color: #666;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  font-family: var(--main-font);
+}
+footer p {
+  margin: 0;
 }
 
 /* Responsive Adjustments */
