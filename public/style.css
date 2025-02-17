@@ -1,15 +1,64 @@
+html {
+  font-size: 20px; /* Increased base font size */
+}
+
+/* Define all custom fonts */
+@font-face {
+  font-family: 'VulfMonoBoldItalic';
+  src: url('fonts/vulf-mono/Vulf_Mono-Bold_Italic_web.woff2') format('woff2');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'VulfMonoLight';
+  src: url('fonts/vulf-mono/Vulf_Mono-Light_web.woff2') format('woff2');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'VulfSansLight';
+  src: url('fonts/vulf-mono/Vulf_Sans-Light.woff') format('woff');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'VulfSansLightItalic';
+  src: url('fonts/vulf-mono/Vulf_Sans-Light_Italic.woff') format('woff');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'VulfMonoLightItalic';
+  src: url('fonts/vulf-mono/Vulf_Mono-Light_Italic_web.woff2') format('woff2');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'VulfMonoRegular';
+  src: url('fonts/vulf-mono/Vulf_Mono-Regular_web.woff') format('woff');
+  font-weight: normal;
+}
+
+/* CSS Variables for easy switching */
 :root {
-  /* Box dimensions increased by about 30% */
+  /* Font variables: change these to quickly adjust fonts across the site */
+  --heading-font: 'VulfMonoBoldItalic', sans-serif;  /* Used for headings */
+  --main-font: 'VulfSansLightItalic', sans-serif; /* Used for navigation and main */
+  --body-font: 'VulfMonoLightItalic', sans-serif;      /* Used for large body text*/
+  --alternative-font: 'VulfMonoRegular', sans-serif;
+  --sans-font: 'VulfSansLight', sans-serif;
+  
+  /* Box dimensions (increased by about 30% from original values) */
   --box-width: clamp(327px, 41vw, 526px);
   --box-height: clamp(327px, 41vw, 526px);
   
-  /* Buffer (kept for potential future use) */
+  /* Buffer (5% of the box width) */
   --buffer: calc(var(--box-width) * 0.05);
   
   /* Navigation and spacing variables */
   --nav-font-size: clamp(0.8rem, 2vw, 1rem);
-  --header-indent: 4rem;
-  --nav-indent: 6rem;
+  --header-indent: 2rem;
+  --nav-indent: 4rem;
 }
 
 /* Reset */
@@ -21,7 +70,7 @@
 
 /* Base Styles */
 body {
-  font-family: "Monaco", monospace;
+  font-family: var(--body-font);
   background-color: #fff;
   color: #000;
   line-height: 1.5;
@@ -36,6 +85,7 @@ header h1 a {
   text-decoration: none;
   color: inherit;
   font-size: 2rem;
+  font-family: var(--body-font);
 }
 
 /* Content Wrapper */
@@ -44,22 +94,23 @@ header h1 a {
   flex-wrap: wrap;
 }
 
-/* Navigation (restored as in the four-box version) */
+/* Navigation (restored from previous version) */
 .content nav {
   flex: 0 0 200px;
   margin-left: var(--nav-indent);
-  margin-top: 0rem;
+  margin-top: 1rem;
 }
 .content nav ul {
   list-style: none;
 }
 .content nav li {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 .content nav a {
   text-decoration: none;
   color: #000;
   font-size: var(--nav-font-size);
+  font-family: var(--main-font);
 }
 .content nav a:hover {
   text-decoration: underline;
@@ -90,7 +141,7 @@ main {
 }
 
 /* Position the yellow drawing box:
-   Centered horizontally, below the header (here top is set to 40% of viewport) */
+   Centered horizontally and below the header (top set to 40% of viewport height) */
 #box-drawing {
   left: 50%;
   top: 40%;
@@ -115,6 +166,9 @@ main {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1rem;
+  /* Use the body font (light version) so that this title is not bold */
+  font-family: var(--main-font);
+  font-weight: normal;
   pointer-events: none;
 }
 .close-icon {
@@ -135,7 +189,7 @@ main {
 }
 
 /* Drawing Box Controls */
-/* Refresh (restart) button moved to bottom left */
+/* Refresh button moved to bottom left, send button at bottom right */
 .restart-button,
 .send-button {
   position: absolute;
@@ -181,6 +235,36 @@ main {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: rgba(0,0,0,0.05);
+  font-size: 0.9rem;
+  margin-top: 2rem;
+}
+footer p {
+  margin: 0;
+  color: #555;
+  font-family: var(--body-font);
+}
+
+/* Gallery Styles for Images Page (if needed) */
+.gallery {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  padding: 1rem;
+}
+.gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+.gallery img:hover {
+  transform: scale(1.05);
 }
 
 /* Responsive Adjustments */
