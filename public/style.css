@@ -1,5 +1,5 @@
 html {
-  font-size: 20px; /* Increased base font size (approx. 2pt larger than default 16px) */
+  font-size: 20px; /* Increased base font size */
 }
 
 /* Define all custom fonts */
@@ -39,26 +39,26 @@ html {
   font-weight: normal;
 }
 
-/* CSS Variables for easy switching */
+/* CSS Variables */
 :root {
-  /* Font variables */
-  --heading-font: 'VulfMonoBoldItalic', sans-serif;  /* Used for headings */
-  --main-font: 'VulfSansLightItalic', sans-serif;      /* Used for nav and footer */
-  --body-font: 'VulfMonoLightItalic', sans-serif;      /* Used for large body text */
-  --alternative-font: 'VulfMonoRegular', sans-serif;
-  --sans-font: 'VulfSansLight', sans-serif;
+  --heading-font: 'VulfMonoBoldItalic', sans-serif;  /* For headings */
+  --main-font: 'VulfSansLightItalic', sans-serif;      /* For nav, footer, and user info in logs */
+  --body-font: 'VulfMonoLightItalic', sans-serif;      /* For large body text */
+  --alternative-font: 'VulfSansLight', sans-serif;    /* For message text in logs */
+  --sans-font: 'VulfMonoRegular', sans-serif;
   
-  /* Box dimensions (increased by about 30% from original values) */
-  --box-width: clamp(327px, 41vw, 526px);
-  --box-height: clamp(327px, 41vw, 526px);
-  
-  /* Buffer (5% of the box width) */
+  /* For larger screens, use clamp values */
+  --box-width-large: clamp(327px, 41vw, 526px);
+  --box-height-large: clamp(327px, 41vw, 526px);
+ 
   --buffer: calc(var(--box-width) * 0.05);
   
-  /* Navigation and spacing variables */
   --nav-font-size: clamp(0.8rem, 2vw, 1rem);
   --header-indent: 2rem;
   --nav-indent: 4rem;
+  
+  --color-blue: #e3eafd; /* Draw box blue */
+  --color-base3: #fdf6e3;  /* Write box solarized base3 */
 }
 
 /* Reset */
@@ -70,28 +70,18 @@ html {
 
 /* Base Styles */
 body {
-  font-family: var(--body-font);
+  font-family: var(--main-font);
   background-color: #fff;
+  /* Use a background image with an overlaid vertical gradient fade */
+   background-image: 
+    linear-gradient(to bottom, #fff 0%, transparent 50%, #fff 100%),
+    url('background/grid-background.png');
+  background-repeat: no-repeat, repeat;
+  background-size: 100% 100%, auto;
+  background-attachment: fixed;
   color: #000;
   line-height: 1.5;
-  position: relative; /* For pseudo-element positioning */
-}
-
-/* Graph paper background with radial fade using a pseudo-element */
-body::before {
-  content: "";
-  position: fixed; /* covers the entire viewport */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;  /* Place behind all content */
-  background-image: 
-    repeating-linear-gradient(0deg, #e3e3e3, #e3e3e3 1px, transparent 1px, transparent 20px),
-    repeating-linear-gradient(90deg, #e3e3e3, #e3e3e3 1px, transparent 1px, transparent 20px),
-    radial-gradient(ellipse at center, transparent 70%, #fff 95%);
-  background-size: 20px 20px, 20px 20px, 100% 100%;
-  background-repeat: repeat, repeat, no-repeat;
+  position: relative;
 }
 
 /* Header */
@@ -103,7 +93,7 @@ header {
 header h1 a {
   text-decoration: none;
   color: inherit;
-  font-size: 2rem;
+  font-size: 3rem;
   font-family: var(--heading-font);
 }
 
@@ -117,17 +107,18 @@ header h1 a {
 .movable-nav {
   position: fixed;
   width: 220px;
-  height: 300px;
+  height: 350px;
   border: 2px solid #eee;
-  border-radius: 12px; /* Ensures all corners are rounded */
-  overflow: hidden;    /* Clipping inner elements to respect border-radius */
+  border-radius: 12px;
+  overflow: hidden;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
   background-color: #fff;
   z-index: 1;
-  top: 25%;   /* Vertical position: 25% from the top of the viewport */
-  left: 5%;   /* Horizontal position: 5% from the left of the viewport */
-  transform: translate(0, -50%); /* Only vertically center the box */
-  color: var(--secondary-color, #000); /* You can adjust the color as desired */
+  top: 17%;   /* Default vertical position (adjust as needed) */
+  left: 5%;   /* Default horizontal position (adjust as needed) */
+  transform: translate(0, -50%);
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Drag Bar for Nav Box */
@@ -135,8 +126,8 @@ header h1 a {
   height: 2rem;
   background-color: rgba(0,0,0,0.1);
   cursor: move;
-  position: relative;
   padding: 0 0.5rem;
+  position: relative;
 }
 .movable-nav .box-title {
   position: absolute;
@@ -160,52 +151,36 @@ header h1 a {
   margin-bottom: 1rem;
 }
 .movable-nav nav a {
-  text-decoration: none; /* Remove underline by default */
+  text-decoration: none;
   color: #000;
   font-size: var(--nav-font-size);
   font-family: var(--main-font);
 }
-
 .movable-nav nav a:hover {
-  text-decoration: none; /* Remove underline on hover as well */
-}
-
-/* Remove active underline if present */
-.movable-nav nav a.active {
   text-decoration: none;
-  color: var(--secondary-color, #000); /* Change color if needed */
 }
 
-/* Main Content Area */
-main {
-  flex: 1;
-  margin: 1rem;
-  position: relative;
-}
-
-/* Container for Boxes (Draw Box) */
-.boxes-container {
-  position: relative;
-}
-
-/* Movable Draw Box */
+/* Movable Draw Box (Draw Box) */
 .movable-box {
   position: fixed;
-  width: var(--box-width);
-  height: var(--box-height);
-  border: 2px solid #eee;
+  /* Use large dimensions by default */
+  width: var(--box-width-large);
+  height: var(--box-height-large);
+ border: 2px solid #eee;
   border-radius: 12px;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
   overflow: hidden;
   z-index: 1;
+  will-change: transform;
+  transform: translateZ(0);
 }
 #box-drawing {
-  left: 50%;
-  top: 40%;
+  top: 47%;
+  left: 42%;
   transform: translate(-50%, -50%);
 }
-.movable-box[data-color="yellow"] {
-  background-color: #FEF9C3;
+.movable-box[data-color="blue"] {
+  background-color: var(--color-blue);
 }
 
 /* Drag Bar & Title for Draw Box */
@@ -213,8 +188,8 @@ main {
   height: 2rem;
   background-color: rgba(0,0,0,0.1);
   cursor: move;
-  position: relative;
   padding: 0 0.5rem;
+  position: relative;
 }
 .box-title {
   position: absolute;
@@ -226,13 +201,14 @@ main {
   font-weight: normal;
   pointer-events: none;
 }
-.minimise-icon {
+.close-icon {
   position: absolute;
   top: 0.4rem;
   right: 0.4rem;
   width: 1.2rem;
   height: 1.2rem;
   cursor: pointer;
+  content: url("icons/minimise.png");
 }
 
 /* Box Content for Draw Box */
@@ -268,20 +244,20 @@ main {
   right: 0.5rem;
 }
 
-/* Minimized Boxes Container (applies to draw box only) */
+/* Minimized Boxes Container (for Draw Box) */
 .minimized-container {
   position: fixed;
-  bottom: 100px; /* Above the footer */
+  bottom: 100px; /* Positioned above the footer */
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* Align with nav box starting position */
   gap: 0.5rem;
+  padding-left: 5%; /* Same as nav box left offset */
 }
 .minimized-box {
-  width: 60px;
-  height: 60px;
-  background-color: #FEF9C3;
+  width: 40px;  /* Smaller mini box */
+  height: 40px;
   border: 1px solid #eee;
   border-radius: 4px;
   display: flex;
@@ -290,23 +266,98 @@ main {
   cursor: pointer;
   font-size: 0;
   color: transparent;
+  /* Background set dynamically from original box */
 }
 
-/* Gallery Styles for Images Page */
-.gallery {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  padding: 1rem;
+/* Movable Write Box (Text Log) */
+#box-write {
+  width: calc(var(--box-width-large) * 0.75); /* 1.5x wider than half width of large size */
+  height: calc(var(--box-height-large) * 1.25); /* 1.25x taller than large size */
+  background-color: var(--color-base3);
+  border: 2px solid #eee;
+  border-radius: 12px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  overflow: hidden;
+  z-index: 1;
+  top: 23%;
+  left: 58%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  transform: translateZ(0);
 }
-.gallery img {
+#box-write .drag-bar {
+  height: 2rem;
+  background-color: rgba(0,0,0,0.1);
+  cursor: move;
+  padding: 0 0.5rem;
+  position: relative;
+}
+#box-write .box-title {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  font-family: var(--main-font);
+  font-weight: normal;
+  pointer-events: none;
+}
+#box-write .box-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 2rem);
+  padding: 0.5rem;
+}
+#box-write .user-info {
+  font-family: var(--main-font);
+  color: #cb4b16;            /* Solarized brred */
+  font-size: 0.8rem;
+}
+#box-write .message-log {
+  flex: 1;
+  overflow-y: auto;
+  border: none;
+  font-family: var(--alternative-font);
+  font-size: 0.8rem;
+  color: #586e75;           /* Solarized base01 */
+}
+#box-write .message-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-base3); /* White input field container */
+  margin: 0;
+  padding: 0.5rem;            /* Padding around the text field for differentiation */
+  border-radius: 12px;        /* Matching rounding */
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  transition: transform 0.3s;
 }
-.gallery img:hover {
-  transform: scale(1.05);
+#box-write .input-prefix {
+  font-family: var(--main-font);
+  font-size: 0.8rem;
+  color: #cb4b16;             /* Solarized brred */
+  margin-left: 0.1rem;
+}
+#box-write .message-input input {
+  flex: 1;
+  border: none;                 /* Remove border */
+  outline: none;                /* Remove focus outline */
+  background: transparent;      /* Transparent so the container's white background shows */
+  font-family: var(--alternative-font);
+  font-size: 0.8rem;
+  color: #657b83              /* Solarized base00 */
+  padding: 0.25rem 0;           /* Minimal vertical padding */
+}
+#box-write .send-message {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  outline: none;
+}
+#box-write .send-message img {
+  width: 24px;
+  height: 24px;
+  display: block;
 }
 
 /* Footer */
@@ -315,7 +366,7 @@ footer {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #f0f0f0; /* consistent light grey */
+  background-color: #f0f0f0;
   color: #666;
   text-align: center;
   padding: 1rem;
@@ -324,6 +375,25 @@ footer {
 }
 footer p {
   margin: 0;
+}
+
+/* Media Queries for Non-Linear Resizing and Avoiding Overlap */
+@media (max-width: 800px) {
+  :root {
+    --box-width-large: 400px;
+    --box-height-large: 400px;
+  }
+  /* Optionally reposition boxes to avoid overlap on smaller screens */
+  #box-drawing {
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  #box-write {
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 /* Responsive Adjustments */

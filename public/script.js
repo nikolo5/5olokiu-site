@@ -4,16 +4,18 @@
 let topZIndex = 1;
 
 /* -------------------------------------
-   DRAGGABLE & MINIMIZABLE BEHAVIOR
+   DRAGGABLE BEHAVIOR
 --------------------------------------*/
-// Apply draggable behavior to both draw box and nav box
+// Apply draggable behavior to draw box, nav box, and write box
 document.querySelectorAll('.movable-box, .movable-nav').forEach(box => {
   const dragBar = box.querySelector('.drag-bar');
-  // Bring box to front on any mousedown
+  
+  // Bring box to front on mousedown
   box.addEventListener('mousedown', () => {
     topZIndex++;
     box.style.zIndex = topZIndex;
   });
+  
   // Draggable logic
   dragBar.addEventListener('mousedown', function(e) {
     e.preventDefault();
@@ -22,10 +24,10 @@ document.querySelectorAll('.movable-box, .movable-nav').forEach(box => {
     const rect = box.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
+    
     function drag(e) {
       let newLeft = e.clientX - offsetX;
       let newTop = e.clientY - offsetY;
-      // Constrain to viewport
       const maxLeft = window.innerWidth - box.offsetWidth;
       const maxTop = window.innerHeight - box.offsetHeight;
       if (newLeft < 0) newLeft = 0;
@@ -36,6 +38,7 @@ document.querySelectorAll('.movable-box, .movable-nav').forEach(box => {
       box.style.top = newTop + 'px';
       box.style.transform = 'none';
     }
+    
     function stopDrag() {
       document.removeEventListener('mousemove', drag);
       document.removeEventListener('mouseup', stopDrag);
@@ -44,11 +47,11 @@ document.querySelectorAll('.movable-box, .movable-nav').forEach(box => {
     document.addEventListener('mouseup', stopDrag);
   });
   
-  // For draw box, add minimise button functionality; for nav box, do nothing
-  if (box.classList.contains('movable-box')) {
-    const minimiseIcon = box.querySelector('.minimise-icon');
-    if (minimiseIcon) {
-      minimiseIcon.addEventListener('click', function(e) {
+  // Attach minimise (close) functionality for draw and write boxes.
+  if (box.classList.contains('movable-box') && (box.id === 'box-drawing' || box.id === 'box-write')) {
+    const closeIcon = box.querySelector('.close-icon');
+    if (closeIcon) {
+      closeIcon.addEventListener('click', function(e) {
         e.stopPropagation();
         minimizeBox(box);
       });
@@ -56,13 +59,14 @@ document.querySelectorAll('.movable-box, .movable-nav').forEach(box => {
   }
 });
 
-/* Minimize function for draw box */
+/* Minimize function for draw and write boxes */
 function minimizeBox(box) {
   box.style.display = 'none';
   const minimizedContainer = document.querySelector('.minimized-container');
   const miniBox = document.createElement('div');
   miniBox.classList.add('minimized-box');
-  miniBox.innerText = "";
+  // Set the minimized box's background color to match the original box's computed background
+  miniBox.style.backgroundColor = window.getComputedStyle(box).backgroundColor;
   minimizedContainer.appendChild(miniBox);
   miniBox.addEventListener('click', () => {
     box.style.display = 'block';
@@ -146,20 +150,70 @@ if (drawingCanvas) {
       console.error(error);
     }
   });
-  document.addEventListener('DOMContentLoaded', () => {
-    // Get the current page filename; if empty, default to "index.html"
-    let currentPage = window.location.pathname.split('/').pop();
-    if (!currentPage) {
-      currentPage = 'index.html';
-    }
-    
-    // For links inside the nav box
-    document.querySelectorAll('.movable-nav nav a').forEach(link => {
-      // Remove any leading slash for matching
-      const href = link.getAttribute('href').replace(/^\//, '');
-      if (href === currentPage) {
-        link.classList.add('active');
-      }
-    });
-  });
 }
+
+/* Write Box Functionality */
+const writeBox = document.getElementById('box-write');
+if (writeBox) {
+  const sendMsgButton = writeBox.querySelector('.send-message');
+  const messageInput = writeBox.querySelector('#message-text');
+  const messageLog = writeBox.querySelector('.message-log');
+  
+  // Send message on button click or Enter key
+  sendMsgButton.addEventListener('click', sendMessage);
+  messageInput.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  
+  function sendMessage() {
+    const text = messageInput.value.trim();
+    if (text !== "") {
+      // Create log entry formatted as "user$: message"
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      
+      const userSpan = document.createElement('span');
+      userSpan.className = 'user-info';
+      userSpan.textContent = "user$: ";
+      
+      const messageSpan = document.createElement('span');
+      messageSpan.className = 'user-message';
+      messageSpan.textContent = text;
+      
+      entry.appendChild(userSpan);
+      entry.appendChild(messageSpan);
+      
+      messageLog.appendChild(entry);
+      messageInput.value = "";
+      messageLog.scrollTop = messageLog.scrollHeight;
+      
+      // Send the message to the server to save to texts.txt
+      fetch('/api/saveText', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      }).then(response => {
+        if (!response.ok) {
+          console.error("Error saving text");
+        }
+      }).catch(err => console.error(err));
+    }
+  }
+}
+
+/* Dynamic Active Nav Link */
+document.addEventListener('DOMContentLoaded', () => {
+  let currentPage = window.location.pathname.split('/').pop();
+  if (!currentPage) {
+    currentPage = 'index.html';
+  }
+  document.querySelectorAll('.movable-nav nav a').forEach(link => {
+    const href = link.getAttribute('href').replace(/^\//, '');
+    if (href === currentPage) {
+      link.classList.add('active');
+    }
+  });
+});

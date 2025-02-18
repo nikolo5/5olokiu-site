@@ -1,58 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5olokiu.net</title>
-  <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon/favicon-96x96.png">
-  <link rel="stylesheet" href="style.css" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>5olokiu</title>
+	<link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon/favicon-96x96.png">
+	<link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <header>
-    <h1><a href="index.html">5olokiu</a></h1>
-  </header>
-  <div class="content">
-    <!-- Nav Box: updated (no minimise button) -->
-    <div class="movable-nav" data-color="nav">
-      <div class="drag-bar">
-        <span class="box-title">nav</span>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="images.html">images</a></li>
-          <li><a href="blog.html">blog</a></li>
-          <li><a href="projects.html">projects</a></li>
-          <li><a href="about.html">about</a></li>
-          <li><a href="contact.html">contact</a></li>
-        </ul>
-      </nav>
-    </div>
-    <main>
-      <div class="boxes-container">
-        <!-- Draw Box -->
-        <div class="movable-box" id="box-drawing" data-color="yellow">
-          <div class="drag-bar">
-			<span class="box-title">draw</span>
-            <span class="box-title" style="display: none;">draw</span>
-            <img src="icons/minimise.png" alt="Minimise" class="minimise-icon" />
-          </div>
-          <div class="box-content">
-            <canvas id="drawing-canvas"></canvas>
-            <button class="restart-button" title="Restart Drawing">
-              <img src="icons/refresh.png" alt="Refresh Drawing" />
-            </button>
-            <button class="send-button" title="Send Drawing">
-              <img src="icons/right-arrow.png" alt="Send Drawing" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-  <footer>
-    <p>5olokiu.net - no rights reserved</p>
-  </footer>
-  <div class="minimized-container"></div>
-  <script src="script.js"></script>
+	<!-- Anchor for scrolling to top -->
+	<a id="top"></a>
+	<header>
+		<h1><a href="index.html">5olokiu</a></h1>
+	</header>
+	<div class="content">
+		<!-- Movable Nav Box -->
+		<div class="movable-nav" data-color="nav">
+			<div class="drag-bar">
+				<span class="box-title">nav</span>
+			</div>
+			<nav>
+				<ul>
+					<li><a href="index.html" class="active" </a>home</a></li>
+					<li><a href="images.html">images</a></li>
+					<li><a href="blog.html">blog</a></li>
+					<li><a href="projects.html">projects</a></li>
+					<li><a href="about.html">about</a></li>
+					<li><a href="contact.html">contact</a></li>
+				</ul>
+			</nav>
+		</div>
+
+		<main>
+			<div class="boxes-container">
+				<!-- Movable Draw Box -->
+				<div class="movable-box" id="box-drawing" data-color="blue">
+					<div class="drag-bar">
+						<span class="box-title">draw</span>
+						<span class="box-title" style="display:none;">draw</span>
+						<img src="icons/minimise.png" alt="Minimise" class="close-icon" />
+					</div>
+					<div class="box-content">
+						<canvas id="drawing-canvas"></canvas>
+						<button class="restart-button" title="Restart Drawing">
+							<img src="icons/refresh.png" alt="Refresh Drawing" />
+						</button>
+						<button class="send-button" title="Send Drawing">
+							<img src="icons/right-arrow.png" alt="Send Drawing" />
+						</button>
+					</div>
+				</div>
+
+				<!-- Movable Write Box -->
+				<div class="movable-box" id="box-write" data-color="base3">
+					<div class="drag-bar">
+						<span class="box-title">write</span>
+						<img src="icons/minimise.png" alt="Minimise" class="close-icon" />
+					</div>
+					<div class="box-content">
+						<div class="message-log"></div>
+						<div class="message-input">
+							<span class="input-prefix">user$:</span>
+							<input type="text" id="message-text" placeholder="" />
+							<button class="send-message" title="Send Message">
+								<img src="icons/right-arrow.png" alt="Send Message" />
+							</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</main>
+	</div>
+	<footer>
+		<p>5olokiu • no rights reserved</p>
+	</footer>
+	<div class="minimized-container"></div>
+	<script src="script.js"></script>
 </body>
+
 </html>
