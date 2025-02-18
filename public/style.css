@@ -1,8 +1,44 @@
-html {
-  font-size: 20px; /* Increased base font size */
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Define all custom fonts */
+/* Custom Properties */
+:root {
+  /* Colors */
+  --color-blue: #e3eafd;
+  --color-base3: #fdf6e3;
+  --color-border: #eee;
+  --color-shadow: rgba(0, 0, 0, 0.2);
+  
+  /* Fonts */
+  --heading-font: 'VulfMonoBoldItalic', sans-serif;
+  --main-font: 'VulfSansLightItalic', sans-serif;
+  --body-font: 'VulfMonoLightItalic', sans-serif;
+  --alternative-font: 'VulfSansLight', sans-serif;
+  
+  /* Box Sizes */
+  --square-box-size: clamp(320px, 35%, 500px);
+  --wide-box-width: clamp(350px, 40%, 600px);
+  --wide-box-height: clamp(200px, 25%, 400px);
+  --nav-box-width: clamp(200px, 20%, 300px);
+  --nav-box-height: clamp(250px, 30%, 400px);
+  
+  /* Grid */
+  --grid-cell: clamp(50px, 5vw, 80px);
+  --golden-ratio: 1.618;
+  
+  /* Spacing */
+  --header-height: 100px;
+  --footer-height: 60px;
+  
+  /* Animation */
+  --transition-speed: 0.3s;
+}
+
+/* Font Faces */
 @font-face {
   font-family: 'VulfMonoBoldItalic';
   src: url('fonts/vulf-mono/Vulf_Mono-Bold_Italic_web.woff2') format('woff2');
@@ -10,27 +46,21 @@ html {
 }
 
 @font-face {
-  font-family: 'VulfMonoLight';
-  src: url('fonts/vulf-mono/Vulf_Mono-Light_web.woff2') format('woff2');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'VulfSansLight';
-  src: url('fonts/vulf-mono/Vulf_Sans-Light.woff') format('woff');
-  font-weight: 300;
-}
-
-@font-face {
   font-family: 'VulfSansLightItalic';
   src: url('fonts/vulf-mono/Vulf_Sans-Light_Italic.woff') format('woff');
-  font-weight: 300;
+  font-weight: normal;
 }
 
 @font-face {
   font-family: 'VulfMonoLightItalic';
   src: url('fonts/vulf-mono/Vulf_Mono-Light_Italic_web.woff2') format('woff2');
-  font-weight: 300;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'VulfSansLight';
+  src: url('fonts/vulf-mono/Vulf_Sans-Light.woff') format('woff');
+  font-weight: normal;
 }
 
 @font-face {
@@ -39,158 +69,164 @@ html {
   font-weight: normal;
 }
 
-/* CSS Variables */
-:root {
-  --heading-font: 'VulfMonoBoldItalic', sans-serif;  /* For headings */
-  --main-font: 'VulfSansLightItalic', sans-serif;      /* For nav, footer, and user info in logs */
-  --body-font: 'VulfMonoLightItalic', sans-serif;      /* For large body text */
-  --alternative-font: 'VulfSansLight', sans-serif;    /* For message text in logs */
-  --sans-font: 'VulfMonoRegular', sans-serif;
-  
-  /* For larger screens, use clamp values */
-  --box-width-large: clamp(327px, 41vw, 526px);
-  --box-height-large: clamp(327px, 41vw, 526px);
- 
-  --buffer: calc(var(--box-width) * 0.05);
-  
-  --nav-font-size: clamp(0.8rem, 2vw, 1rem);
-  --header-indent: 2rem;
-  --nav-indent: 4rem;
-  
-  --color-blue: #e3eafd; /* Draw box blue */
-  --color-base3: #fdf6e3;  /* Write box solarized base3 */
-}
-
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Base Styles */
+/* Body Setup */
 body {
   font-family: var(--main-font);
   background-color: #fff;
-  /* Use a background image with an overlaid vertical gradient fade */
-   background-image: 
+  background-image:
     linear-gradient(to bottom, #fff 0%, transparent 50%, #fff 100%),
     url('background/grid-background.png');
   background-repeat: no-repeat, repeat;
   background-size: 100% 100%, auto;
   background-attachment: fixed;
   color: #000;
-  line-height: 1.5;
+  min-height: 100vh;
+  overflow: hidden;
   position: relative;
 }
 
 /* Header */
 header {
-  margin: var(--header-indent);
-  margin-top: 2.5rem;
-  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 100;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
 }
+
 header h1 a {
   text-decoration: none;
   color: inherit;
   font-size: 3rem;
   font-family: var(--heading-font);
+  transition: opacity 0.2s ease;
 }
 
-/* Content Wrapper */
+header h1 a:hover {
+  opacity: 0.8;
+}
+
+/* Main Content Area */
 .content {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  bottom: var(--footer-height);
   display: flex;
-  flex-wrap: wrap;
-}
-
-/* Movable Nav Box */
-.movable-nav {
-  position: fixed;
-  width: 220px;
-  height: 350px;
-  border: 2px solid #eee;
-  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-  background-color: #fff;
-  z-index: 1;
-  top: 17%;   /* Default vertical position (adjust as needed) */
-  left: 5%;   /* Default horizontal position (adjust as needed) */
-  transform: translate(0, -50%);
-  will-change: transform;
-  transform: translateZ(0);
+  padding: 2rem;
 }
 
-/* Drag Bar for Nav Box */
-.movable-nav .drag-bar {
-  height: 2rem;
-  background-color: rgba(0,0,0,0.1);
-  cursor: move;
-  padding: 0 0.5rem;
+/* Grid Container */
+.grid-container {
   position: relative;
-}
-.movable-nav .box-title {
-  position: absolute;
-  left: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  font-family: var(--main-font);
-  font-weight: normal;
-  pointer-events: none;
-}
-
-/* Navigation inside Nav Box */
-.movable-nav nav {
-  padding: 0.5rem;
-}
-.movable-nav nav ul {
-  list-style: none;
-}
-.movable-nav nav li {
-  margin-bottom: 1rem;
-}
-.movable-nav nav a {
-  text-decoration: none;
-  color: #000;
-  font-size: var(--nav-font-size);
-  font-family: var(--main-font);
-}
-.movable-nav nav a:hover {
-  text-decoration: none;
-}
-
-/* Movable Draw Box (Draw Box) */
-.movable-box {
-  position: fixed;
-  /* Use large dimensions by default */
-  width: var(--box-width-large);
-  height: var(--box-height-large);
- border: 2px solid #eee;
+  width: 90vw;
+  height: 80vh;
+  max-width: 1600px;
+  max-height: 1000px;
+  min-width: 800px;
+  min-height: 600px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Grid Overlay */
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent calc(var(--grid-cell) - 1px), rgba(0, 0, 0, 0.03) var(--grid-cell)),
+    repeating-linear-gradient(90deg, transparent, transparent calc(var(--grid-cell) - 1px), rgba(0, 0, 0, 0.03) var(--grid-cell));
+  pointer-events: none;
+  opacity: 1;
+  border-radius: 12px;
+}
+
+/* Boxes Container */
+.boxes-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
   overflow: hidden;
-  z-index: 1;
+}
+
+/* Common Box Styles */
+.movable-box,
+.movable-nav {
+  position: absolute;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 2px 2px 5px var(--color-shadow);
+  transition: all var(--transition-speed) ease-out;
   will-change: transform;
-  transform: translateZ(0);
 }
-#box-drawing {
-  top: 47%;
-  left: 42%;
-  transform: translate(-50%, -50%);
-}
-.movable-box[data-color="blue"] {
+
+/* Square Box (Draw) */
+.square-box {
+  width: var(--square-box-size);
+  height: var(--square-box-size);
   background-color: var(--color-blue);
 }
 
-/* Drag Bar & Title for Draw Box */
+.square-box .box-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#drawing-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-radius: 0 0 10px 10px;
+}
+
+/* Wide Box (Write) */
+.wide-box {
+  width: var(--wide-box-width);
+  height: var(--wide-box-height);
+  background-color: var(--color-base3);
+}
+
+/* Nav Box */
+.movable-nav {
+  width: var(--nav-box-width);
+  height: var(--nav-box-height);
+  background-color: #fff;
+}
+
+/* Drag Bar */
 .drag-bar {
   height: 2rem;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   cursor: move;
   padding: 0 0.5rem;
   position: relative;
+  border-radius: 10px 10px 0 0;
+  user-select: none;
 }
+
 .box-title {
   position: absolute;
   left: 0.5rem;
@@ -198,9 +234,9 @@ header h1 a {
   transform: translateY(-50%);
   font-size: 1rem;
   font-family: var(--main-font);
-  font-weight: normal;
   pointer-events: none;
 }
+
 .close-icon {
   position: absolute;
   top: 0.4rem;
@@ -209,155 +245,150 @@ header h1 a {
   height: 1.2rem;
   cursor: pointer;
   content: url("icons/minimise.png");
+  transition: opacity 0.2s ease;
 }
 
-/* Box Content for Draw Box */
+.close-icon:hover {
+  opacity: 0.7;
+}
+
+/* Box Content */
 .box-content {
-  width: 100%;
   height: calc(100% - 2rem);
+  padding: 0.5rem;
   position: relative;
+}
+
+/* Navigation Content */
+.movable-nav nav {
   padding: 0.5rem;
 }
 
-/* Drawing Box Controls */
+.movable-nav nav ul {
+  list-style: none;
+}
+
+.movable-nav nav li {
+  margin-bottom: 1rem;
+}
+
+.movable-nav nav a {
+  text-decoration: none;
+  color: #000;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  font-family: var(--main-font);
+  transition: opacity 0.2s ease;
+}
+
+.movable-nav nav a:hover {
+  opacity: 0.7;
+}
+
+.movable-nav nav a.active {
+  font-weight: bold;
+}
+
+/* Write Box Specifics */
+#box-write .box-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-log {
+  flex: 1;
+  overflow-y: auto;
+  font-family: var(--alternative-font);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+}
+
+.message-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #fff;
+  padding: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-prefix {
+  font-family: var(--main-font);
+  color: #777;
+  font-size: 0.8rem;
+}
+
+.message-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--alternative-font);
+  font-size: 0.8rem;
+}
+
+/* Draw Box Controls */
 .restart-button,
 .send-button {
   position: absolute;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 0.5rem;
   outline: none;
+  z-index: 2;
+  transition: opacity 0.2s ease;
 }
-.restart-button img,
-.send-button img {
-  width: 24px;
-  height: 24px;
-  display: block;
+
+.restart-button:hover,
+.send-button:hover {
+  opacity: 0.7;
 }
+
 .restart-button {
   bottom: 0.5rem;
   left: 0.5rem;
 }
+
 .send-button {
   bottom: 0.5rem;
   right: 0.5rem;
 }
 
-/* Minimized Boxes Container (for Draw Box) */
-.minimized-container {
-  position: fixed;
-  bottom: 100px; /* Positioned above the footer */
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start; /* Align with nav box starting position */
-  gap: 0.5rem;
-  padding-left: 5%; /* Same as nav box left offset */
-}
-.minimized-box {
-  width: 40px;  /* Smaller mini box */
-  height: 40px;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 0;
-  color: transparent;
-  /* Background set dynamically from original box */
-}
-
-/* Movable Write Box (Text Log) */
-#box-write {
-  width: calc(var(--box-width-large) * 0.75); /* 1.5x wider than half width of large size */
-  height: calc(var(--box-height-large) * 1.25); /* 1.25x taller than large size */
-  background-color: var(--color-base3);
-  border: 2px solid #eee;
-  border-radius: 12px;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-  overflow: hidden;
-  z-index: 1;
-  top: 23%;
-  left: 58%;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-  transform: translateZ(0);
-}
-#box-write .drag-bar {
-  height: 2rem;
-  background-color: rgba(0,0,0,0.1);
-  cursor: move;
-  padding: 0 0.5rem;
-  position: relative;
-}
-#box-write .box-title {
-  position: absolute;
-  left: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  font-family: var(--main-font);
-  font-weight: normal;
-  pointer-events: none;
-}
-#box-write .box-content {
-  display: flex;
-  flex-direction: column;
-  height: calc(100% - 2rem);
-  padding: 0.5rem;
-}
-#box-write .user-info {
-  font-family: var(--main-font);
-  color: #cb4b16;            /* Solarized brred */
-  font-size: 0.8rem;
-}
-#box-write .message-log {
-  flex: 1;
-  overflow-y: auto;
-  border: none;
-  font-family: var(--alternative-font);
-  font-size: 0.8rem;
-  color: #586e75;           /* Solarized base01 */
-}
-#box-write .message-input {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--color-base3); /* White input field container */
-  margin: 0;
-  padding: 0.5rem;            /* Padding around the text field for differentiation */
-  border-radius: 12px;        /* Matching rounding */
-  width: 100%;
-}
-#box-write .input-prefix {
-  font-family: var(--main-font);
-  font-size: 0.8rem;
-  color: #cb4b16;             /* Solarized brred */
-  margin-left: 0.1rem;
-}
-#box-write .message-input input {
-  flex: 1;
-  border: none;                 /* Remove border */
-  outline: none;                /* Remove focus outline */
-  background: transparent;      /* Transparent so the container's white background shows */
-  font-family: var(--alternative-font);
-  font-size: 0.8rem;
-  color: #657b83              /* Solarized base00 */
-  padding: 0.25rem 0;           /* Minimal vertical padding */
-}
-#box-write .send-message {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  outline: none;
-}
-#box-write .send-message img {
+.restart-button img,
+.send-button img,
+.send-message img {
   width: 24px;
   height: 24px;
   display: block;
+}
+
+/* Minimized Container */
+.minimized-container {
+  position: fixed;
+  bottom: calc(var(--footer-height) + 20px);
+  left: 20px;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 90;
+}
+
+.minimized-box {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.minimized-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Footer */
@@ -366,50 +397,72 @@ footer {
   bottom: 0;
   left: 0;
   width: 100%;
+  height: var(--footer-height);
   background-color: #f0f0f0;
   color: #666;
-  text-align: center;
-  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.9rem;
   font-family: var(--main-font);
-}
-footer p {
-  margin: 0;
+  z-index: 100;
 }
 
-/* Media Queries for Non-Linear Resizing and Avoiding Overlap */
-@media (max-width: 800px) {
+/* Media Queries */
+@media (max-width: 1200px) {
+  .grid-container {
+    width: 95vw;
+    height: 85vh;
+  }
+  
   :root {
-    --box-width-large: 400px;
-    --box-height-large: 400px;
-  }
-  /* Optionally reposition boxes to avoid overlap on smaller screens */
-  #box-drawing {
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  #box-write {
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    --square-box-size: clamp(280px, 30%, 450px);
+    --wide-box-width: clamp(300px, 35%, 500px);
+    --nav-box-width: clamp(180px, 18%, 250px);
   }
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
-  header {
-    text-align: center;
+  body {
+    overflow-y: auto;
   }
+  
   .content {
-    flex-direction: column;
-    align-items: center;
+    position: static;
+    height: auto;
+    padding: 1rem;
   }
-  .content nav {
-    margin: 1rem 0;
-    text-align: center;
+  
+  .grid-container {
+    min-width: unset;
+    width: 100%;
+    height: auto;
   }
-  main {
-    justify-content: center;
+  
+  .movable-box,
+  .movable-nav {
+    position: static;
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  .square-box {
+    aspect-ratio: 1;
+    width: 100%;
+    height: auto;
+  }
+  
+  .wide-box {
+    display: none;
+  }
+  
+  .movable-nav {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    z-index: 90;
   }
 }
