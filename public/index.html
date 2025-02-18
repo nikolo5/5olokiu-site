@@ -1,86 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5olokiu</title>
     <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon/favicon-96x96.png">
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1><a href="index.html">5olokiu</a></h1>
     </header>
 
-    <div class="content">
+    <main class="workspace">
+        <!-- Grid Container -->
         <div class="grid-container">
-            <!-- Grid overlay for development -->
-            <div class="grid-overlay"></div>
-
-            <!-- Movable boxes container -->
-            <div class="boxes-container">
-                <!-- Nav Box -->
-                <div class="movable-nav" data-color="nav">
-                    <div class="drag-bar">
-                        <span class="box-title">nav</span>
-                    </div>
-                    <nav>
-                        <ul>
-                            <li><a href="index.html" class="active">home</a></li>
-                            <li><a href="images.html">images</a></li>
-                            <li><a href="blog.html">blog</a></li>
-                            <li><a href="projects.html">projects</a></li>
-                            <li><a href="about.html">about</a></li>
-                            <li><a href="contact.html">contact</a></li>
-                        </ul>
-                    </nav>
-                </div>
-
-                <!-- Draw Box -->
-                <div class="movable-box square-box" id="box-drawing" data-color="blue">
-                    <div class="drag-bar">
-                        <span class="box-title">draw</span>
-                        <img src="icons/minimise.png" alt="Minimise" class="close-icon" />
-                    </div>
-                    <div class="box-content">
-                        <canvas id="drawing-canvas"></canvas>
-                        <button class="restart-button" title="Restart Drawing">
-                            <img src="icons/refresh.png" alt="Refresh Drawing" />
-                        </button>
-                        <button class="send-button" title="Send Drawing">
-                            <img src="icons/right-arrow.png" alt="Send Drawing" />
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Write Box -->
-                <div class="movable-box wide-box" id="box-write" data-color="base3">
-                    <div class="drag-bar">
-                        <span class="box-title">write</span>
-                        <img src="icons/minimise.png" alt="Minimise" class="close-icon" />
-                    </div>
-                    <div class="box-content">
-                        <div class="message-log"></div>
-                        <div class="message-input">
-                            <span class="input-prefix">user$:</span>
-                            <input type="text" id="message-text" placeholder="" />
-                            <button class="send-message" title="Send Message">
-                                <img src="icons/right-arrow.png" alt="Send Message" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Windows will be created dynamically -->
         </div>
-    </div>
+
+        <!-- Minimized Windows Dock -->
+        <div class="dock"></div>
+    </main>
 
     <footer>
         <p>5olokiu • no rights reserved</p>
     </footer>
 
-    <!-- Minimized windows container -->
-    <div class="minimized-container"></div>
+    <!-- Window Templates -->
+    <template id="window-template">
+        <div class="window" part="window">
+            <div class="window-titlebar" part="titlebar">
+                <span class="window-title" part="title"></span>
+                <button class="window-minimize" part="minimize" aria-label="Minimize">
+                    <img src="icons/minimise.png" alt="Minimize">
+                </button>
+            </div>
+            <div class="window-content" part="content">
+                <slot></slot>
+            </div>
+        </div>
+    </template>
 
-    <script src="script.js"></script>
+    <!-- Navigation Window Template -->
+    <template id="nav-content">
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">home</a></li>
+                <li><a href="images.html">images</a></li>
+                <li><a href="blog.html">blog</a></li>
+                <li><a href="projects.html">projects</a></li>
+                <li><a href="about.html">about</a></li>
+                <li><a href="contact.html">contact</a></li>
+            </ul>
+        </nav>
+    </template>
+
+    <!-- Draw Window Template -->
+    <template id="draw-content">
+        <canvas></canvas>
+        <div class="draw-controls">
+            <button class="restart-button" title="Restart Drawing">
+                <img src="icons/refresh.png" alt="Refresh Drawing">
+            </button>
+            <button class="send-button" title="Send Drawing">
+                <img src="icons/right-arrow.png" alt="Send Drawing">
+            </button>
+        </div>
+    </template>
+
+    <!-- Write Window Template -->
+    <template id="write-content">
+        <div class="message-log"></div>
+        <div class="message-input">
+            <span class="input-prefix">user$:</span>
+            <input type="text" placeholder="">
+            <button class="send-message" title="Send Message">
+                <img src="icons/right-arrow.png" alt="Send Message">
+            </button>
+        </div>
+    </template>
+
+    <!-- Load Web Components and Main Script -->
+    <script type="module" src="components/window.js"></script>
+    <script type="module" src="components/nav-window.js"></script>
+    <script type="module" src="components/draw-window.js"></script>
+    <script type="module" src="components/write-window.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
