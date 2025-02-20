@@ -1,10 +1,8 @@
 class WindowManager {
     constructor() {
-        this.container = document.querySelector('.grid-container');
+        this.workspace = document.querySelector('.workspace');
         this.dock = document.querySelector('.dock');
         this.windows = new Map();
-        this.gridSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--grid-cell'));
-        this.goldenRatio = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--golden-ratio'));
         
         // Bind methods
         this._handleResize = this._handleResize.bind(this);
@@ -13,7 +11,7 @@ class WindowManager {
     }
 
     initialize() {
-        if (!this.container || !this.dock) {
+        if (!this.workspace || !this.dock) {
             console.error('Required elements not found');
             return;
         }
@@ -23,8 +21,8 @@ class WindowManager {
         
         // Set up event listeners
         window.addEventListener('resize', this._handleResize);
-        this.container.addEventListener('minimize', this._handleWindowMinimize);
-        this.container.addEventListener('restore', this._handleWindowRestore);
+        this.workspace.addEventListener('minimize', this._handleWindowMinimize);
+        this.workspace.addEventListener('restore', this._handleWindowRestore);
         
         // Initial layout
         requestAnimationFrame(() => {
@@ -45,49 +43,55 @@ class WindowManager {
         const writeWindow = document.createElement('write-window');
         this.windows.set('write', writeWindow);
         
-        // Add to container
+        // Add to workspace with fade-in effect
         this.windows.forEach(window => {
             window.style.opacity = '0';
-            this.container.appendChild(window);
+            this.workspace.appendChild(window);
         });
 
         // Fade in windows after they're positioned
         requestAnimationFrame(() => {
             this.windows.forEach(window => {
-                window.style.transition = 'opacity 0.3s ease-out';
+                window.style.transition = 'opacity 0.3s ease-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 window.style.opacity = '1';
             });
         });
     }
 
     _layoutWindows() {
-        const containerRect = this.container.getBoundingClientRect();
-        const gridCols = Math.floor(containerRect.width / this.gridSize);
-        const gridRows = Math.floor(containerRect.height / this.gridSize);
+        const workspaceRect = this.workspace.getBoundingClientRect();
+        const padding = 40; // Padding from edges
 
-        // Calculate positions in grid units
+        // Calculate positions based on workspace size
         const positions = {
             nav: {
-                x: Math.floor(gridCols * 0.2),
-                y: Math.floor(gridRows * 0.2)
+                x: padding,
+                y: padding
             },
             draw: {
-                x: Math.floor(gridCols * 0.4),
-                y: Math.floor(gridRows * 0.3)
+                x: workspaceRect.width * 0.3,
+                y: workspaceRect.height * 0.2
             },
             write: {
-                x: Math.floor(gridCols * 0.6),
-                y: Math.floor(gridRows * 0.5)
+                x: workspaceRect.width * 0.6,
+                y: workspaceRect.height * 0.4
             }
         };
 
-        // Position windows
+        // Position windows with staggered animation
         this.windows.forEach((window, id) => {
             if (!window.hasAttribute('minimized')) {
                 const pos = positions[id];
-                const x = pos.x * this.gridSize;
-                const y = pos.y * this.gridSize;
-                window.position = { x, y };
+                
+                // Ensure windows are within bounds
+                const rect = window.getBoundingClientRect();
+                const maxX = workspaceRect.width - rect.width - padding;
+                const maxY = workspaceRect.height - rect.height - padding;
+                
+                window.position = {
+                    x: Math.max(padding, Math.min(pos.x, maxX)),
+                    y: Math.max(padding, Math.min(pos.y, maxY))
+                };
             }
         });
     }
@@ -99,10 +103,6 @@ class WindowManager {
         }
         
         this.resizeTimeout = setTimeout(() => {
-            // Update grid size
-            this.gridSize = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--grid-cell'));
-            
-            // Reposition windows
             this._layoutWindows();
         }, 100);
     }
@@ -113,11 +113,49 @@ class WindowManager {
             .find(([id, w]) => w === window)?.[0];
             
         if (windowId) {
-            // Create dock item
+            // Create dock item with animation
             const dockItem = document.createElement('button');
             dockItem.className = 'dock-item';
             dockItem.classList.add(`${windowId}-dock-item`);
             dockItem.setAttribute('data-window-id', windowId);
+            
+            // Get window position for animation
+            const rect = window.getBoundingClientRect();
+            const dockRect = this.dock.getBoundingClientRect();
+            
+            // Set initial position
+            dockItem.style.position = 'fixed';
+            dockItem.style.left = `${rect.left}px`;
+            dockItem.style.top = `${rect.top}px`;
+            dockItem.style.width = `${rect.width}px`;
+            dockItem.style.height = `${rect.height}px`;
+            dockItem.style.transform = 'scale(1)';
+            dockItem.style.opacity = '0';
+            
+            // Add to dock
+            this.dock.appendChild(dockItem);
+            
+            // Trigger animation
+            requestAnimationFrame(() => {
+                dockItem.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                dockItem.style.left = `${dockRect.left}px`;
+                dockItem.style.top = `${dockRect.top}px`;
+                dockItem.style.width = '40px';
+                dockItem.style.height = '40px';
+                dockItem.style.transform = 'scale(1)';
+                dockItem.style.opacity = '1';
+                
+                // Reset styles after animation
+                setTimeout(() => {
+                    dockItem.style.position = '';
+                    dockItem.style.left = '';
+                    dockItem.style.top = '';
+                    dockItem.style.transform = '';
+                    dockItem.style.transition = '';
+                }, 300);
+            });
+            
+            // Add click handler
             dockItem.addEventListener('click', () => {
                 window.removeAttribute('minimized');
                 this.dock.removeChild(dockItem);
@@ -129,7 +167,6 @@ class WindowManager {
                     composed: true
                 }));
             });
-            this.dock.appendChild(dockItem);
         }
     }
 
