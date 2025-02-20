@@ -46,6 +46,7 @@ class WindowManager {
         // Add to workspace with fade-in effect
         this.windows.forEach(window => {
             window.style.opacity = '0';
+            window.style.zIndex = '1'; // Ensure windows are above the grid background
             this.workspace.appendChild(window);
         });
 
@@ -62,19 +63,20 @@ class WindowManager {
         const workspaceRect = this.workspace.getBoundingClientRect();
         const padding = 40; // Padding from edges
 
-        // Calculate positions based on workspace size
+        // Calculate positions based on workspace size and golden ratio
+        const goldenRatio = 1.618;
         const positions = {
             nav: {
                 x: padding,
                 y: padding
             },
             draw: {
-                x: workspaceRect.width * 0.3,
-                y: workspaceRect.height * 0.2
+                x: workspaceRect.width / goldenRatio - 200,
+                y: workspaceRect.height / goldenRatio - 200
             },
             write: {
-                x: workspaceRect.width * 0.6,
-                y: workspaceRect.height * 0.4
+                x: workspaceRect.width - 500 - padding,
+                y: workspaceRect.height - 350 - padding
             }
         };
 

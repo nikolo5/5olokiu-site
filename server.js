@@ -7,10 +7,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002; // Changed port to 3002
 
 // Middleware
-app.use(express.static('public'));
+app.use(express.static('public', {
+    setHeaders: (res, path) => {
+        // Ensure .js files are served with correct MIME type for modules
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript; charset=UTF-8');
+        }
+    }
+}));
 app.use(express.json({ limit: '10mb' }));
 
 // Serve static files
